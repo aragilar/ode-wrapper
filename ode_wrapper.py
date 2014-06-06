@@ -55,18 +55,36 @@ def validate_cvode_flags(flag, x_vals, y_vals, x_err, y_err):
         log.error(
             msg + "y_vals: " + str(y_vals) + " " + "x_vals: " + str(x_vals)
         )
-        raise RuntimeError(msg)
+        error = RuntimeError(msg)
+        error.flag = flag
+        error.x_vals = x_vals
+        error.y_vals = y_vals
+        error.x_err = x_err
+        error.y_err = y_err
+        raise error
     elif CVODE_RETURN_FLAGS[flag] == "TOO_MUCH_ACC":
         msg = CVODE_ERROR_HUMAN_READABLE["TOO_MUCH_ACC"].format(x_err, y_err)
         log.error(
             msg + "y_vals: " + str(y_vals) + " " + "x_vals: " + str(x_vals)
         )
-        raise RuntimeError(msg)
+        error = RuntimeError(msg)
+        error.flag = flag
+        error.x_vals = x_vals
+        error.y_vals = y_vals
+        error.x_err = x_err
+        error.y_err = y_err
+        raise error
     else:
         msg = CVODE_RETURN_FLAGS[flag]
         if flag < 0:
             log.error(msg)
-            raise RuntimeError(msg)
+            error = RuntimeError(msg)
+            error.flag = flag
+            error.x_vals = x_vals
+            error.y_vals = y_vals
+            error.x_err = x_err
+            error.y_err = y_err
+            raise error
         else:
             log.warn(msg)
             return y_vals
